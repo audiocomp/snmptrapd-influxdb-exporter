@@ -4,6 +4,9 @@ LABEL maintainer="Steve Brown https://github.com/audiocomp"
 # Update SSL
 RUN apk add --no-cache --progress -v openssl
 
+# Update PIP
+RUN apk add --no-cache --progress -v py3-pip
+
 # Install Required Packages
 COPY requirements.txt  /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
