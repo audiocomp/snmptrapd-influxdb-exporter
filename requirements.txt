@@ -1,4 +1,4 @@
-aiohttp==3.9.5
+aiohttp==3.10.2
 aiohttp-retry==2.8.3
 influxdb-client==1.42.0
 pydantic==2.7.0
