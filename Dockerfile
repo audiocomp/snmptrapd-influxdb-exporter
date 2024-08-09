@@ -1,8 +1,9 @@
-FROM python:3.12-alpine3.19
+FROM python:3.12-alpine3.20
 LABEL maintainer="Steve Brown https://github.com/audiocomp"
 
-# Update SSL
-RUN apk add --no-cache --progress -v openssl
+# Update
+RUN apk update
+RUN apk upgrade --no-cache -v
 
 # Update PIP
 RUN pip install --upgrade pip
