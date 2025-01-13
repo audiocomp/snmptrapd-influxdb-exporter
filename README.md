@@ -37,13 +37,19 @@ snmpv2:
 
 # SNMPv3
 snmpv3:
-  engine_id: 800007e5804089071bc6d10a41
+  engine_id: 800009e5604083371bc6d10a42
   users:
-    - user: usr-md5-aes128
+    - user: trap-md5-aes128
       auth_protocol: md5
       auth_key: authkey1
       priv_protocol: aes128
       priv_key: privkey1
+      engine_id: 800009e5604083371bc6d10a43
+    - user: inform-sha512-aes256
+      auth_protocol: sha512
+      auth_key: authkey2
+      priv_protocol: aes256
+      priv_key: privkey2
 ```
 
 ### 4. Configure the Processing Script
@@ -235,4 +241,27 @@ To Restart the containter use *docker-compose up*:
 
 ```sh
 # docker-compose up -d
+```
+
+### 6. Send Test Messages
+
+snmptrap and snmpinform can be used to send test messages for the configured protocols:
+
+Using a MIB
+
+```sh
+snmptrap -v 2c -c public 127.0.0.1 42 SNMPv2-MIB::coldStart.0
+snmptrap -v 2c -c public localhost '' NET-SNMP-EXAMPLES-MIB::netSnmpExampleHeartbeatNotification netSnmpExampleHeartbeatRate i 123456
+snmptrap -d -v 3 -u trap-md5-aes128 -a MD5 -A authkey1 -x AES -X privkey1 -l authPriv -e 0x800009e5604083371bc6d10a43 localhost '' NET-SNMP-EXAMPLES-MIB::netSnmpExampleHeartbeatNotification netSnmpExampleHeartbeatRate i 123456
+snmpinform -d -v 3 -u inform-sha512-aes256 -a SHA-512 -A authkey2 -x AES-256 -X privkey2 -l authPriv localhost '' NET-SNMP-EXAMPLES-MIB::netSnmpExampleHeartbeatNotification netSnmpExampleHeartbeatRate i 123456
+```
+
+
+Using OIDs instead of a MIB
+
+```sh
+snmptrap -v 2c -c public 127.0.0.1 42 1.3.6.1.6.3.1.1.5.1.0
+snmptrap -v 2c -c public 127.0.0.1 '' 1.3.6.1.4.1.8072.2.3.0.1 1.3.6.1.4.1.8072.2.3.2.1 i 123456
+snmptrap -d -v 3 -u trap-md5-aes128 -a MD5 -A authkey1 -x AES -X privkey1 -l authPriv -e 0x800009e5604083371bc6d10a43 127.0.0.1 '' 1.3.6.1.4.1.8072.2.3.0.1 1.3.6.1.4.1.8072.2.3.2.1 i 123456
+snmpinform -d -v 3 -u inform-sha512-aes256 -a SHA-512 -A authkey2 -x AES-256 -X privkey2 -l authPriv 127.0.0.1 '' 1.3.6.1.4.1.8072.2.3.0.1 1.3.6.1.4.1.8072.2.3.2.1 i 123456
 ```

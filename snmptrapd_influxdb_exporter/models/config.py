@@ -13,24 +13,24 @@ class LogLevel(Enum):
 
 
 class AuthProtocol(Enum):
-    usmHMACMD5AuthProtocol = "md5"
-    usmHMACSHAAuthProtocol = "sha"
-    usmHMAC128SHA224AuthProtocol = "sha128"
-    usmHMAC192SHA256AuthProtocol = "sha192"
-    usmHMAC256SHA384AuthProtocol = "sha256"
-    usmHMAC384SHA512AuthProtocol = "sha512"
-    usmNoAuthProtocol = "none"
+    USM_AUTH_HMAC96_MD5 = "md5"
+    USM_AUTH_HMAC96_SHA = "sha"
+    USM_AUTH_HMAC128_SHA224 = "sha128"
+    USM_AUTH_HMAC192_SHA256 = "sha192"
+    USM_AUTH_HMAC256_SHA384 = "sha256"
+    USM_AUTH_HMAC384_SHA512 = "sha512"
+    USM_AUTH_NONE = "none"
 
 
 class PrivProtocol(Enum):
-    usmAesCfb128Protocol = "aes128"
-    usmAesCfb192Protocol = "aes192"
-    usmAesCfb256Protocol = "aes256"
-    usmDESPrivProtocol = "des"
-    usm3DESEDEPrivProtocol = "3des"
-    usmAesBlumenthalCfb192Protocol = "aes192Blumenthal"
-    usmAesBlumenthalCfb256Protocol = "aes256Blumenthal"
-    usmNoPrivProtocol = "none"
+    USM_PRIV_CFB128_AES = "aes128"
+    USM_PRIV_CFB192_AES = "aes192"
+    USM_PRIV_CFB256_AES = "aes256"
+    USM_PRIV_CBC56_DES = "des"
+    USM_PRIV_CBC168_3DES = "3des"
+    USM_PRIV_CFB192_AES_BLUMENTHAL = "aes192Blumenthal"
+    USM_PRIV_CFB256_AES_BLUMENTHAL = "aes256Blumenthal"
+    USM_PRIV_NONE = "none"
 
 
 class Server(BaseModel):
