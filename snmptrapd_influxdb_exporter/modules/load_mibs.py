@@ -11,7 +11,11 @@ mib_path: str = os.path.join(
 mib_list: List[str] = snmp_config.mib_list
 
 mibBuilder = builder.MibBuilder()
-compiler.addMibCompiler(mibBuilder, sources=[f"file://{mib_path}"])
+compiler.addMibCompiler(
+    mibBuilder, sources=[
+        f"file://{mib_path}",
+        "/usr/share/snmp/mibs"
+        ])
 if mib_list != []:
     try:
         mibBuilder.loadModules(*mib_list)
