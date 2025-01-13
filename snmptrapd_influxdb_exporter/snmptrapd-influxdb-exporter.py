@@ -10,21 +10,21 @@ from pysnmp.proto.api import v2c
 from pysnmp.smi import rfc1902
 
 authProtocol = {
-    "usmHMACMD5AuthProtocol": config.usmHMACMD5AuthProtocol,
-    "usmHMACSHAAuthProtocol": config.usmHMACSHAAuthProtocol,
-    "usmHMAC128SHA224AuthProtocol": config.usmHMAC128SHA224AuthProtocol,
-    "usmHMAC192SHA256AuthProtocol": config.usmHMAC192SHA256AuthProtocol,
-    "usmHMAC256SHA384AuthProtocol": config.usmHMAC256SHA384AuthProtocol,
-    "usmHMAC384SHA512AuthProtocol": config.usmHMAC384SHA512AuthProtocol,
-    "usmAesCfb128Protocol": config.usmAesCfb128Protocol,
-    "usmAesCfb256Protocol": config.usmAesCfb256Protocol,
-    "usmAesCfb192Protocol": config.usmAesCfb192Protocol,
-    "usmDESPrivProtocol": config.usmDESPrivProtocol,
-    "usm3DESEDEPrivProtocol": config.usm3DESEDEPrivProtocol,
-    "usmAesBlumenthalCfb192Protocol": config.usmAesBlumenthalCfb192Protocol,
-    "usmAesBlumenthalCfb256Protocol": config.usmAesBlumenthalCfb256Protocol,
-    "usmNoAuthProtocol": config.usmNoAuthProtocol,
-    "usmNoPrivProtocol": config.usmNoPrivProtocol,
+    "USM_AUTH_HMAC96_MD5": config.USM_AUTH_HMAC96_MD5,
+    "USM_AUTH_HMAC96_SHA": config.USM_AUTH_HMAC96_SHA,
+    "USM_AUTH_HMAC128_SHA224": config.USM_AUTH_HMAC128_SHA224,
+    "USM_AUTH_HMAC192_SHA256": config.USM_AUTH_HMAC192_SHA256,
+    "USM_AUTH_HMAC256_SHA384": config.USM_AUTH_HMAC256_SHA384,
+    "USM_AUTH_HMAC384_SHA512": config.USM_AUTH_HMAC384_SHA512,
+    "USM_PRIV_CFB128_AES": config.USM_PRIV_CFB128_AES,
+    "USM_PRIV_CFB256_AES": config.USM_PRIV_CFB256_AES,
+    "USM_PRIV_CFB192_AES": config.USM_PRIV_CFB192_AES,
+    "USM_PRIV_CBC56_DES": config.USM_PRIV_CBC56_DES,
+    "USM_PRIV_CBC168_3DES": config.USM_PRIV_CBC168_3DES,
+    "USM_PRIV_CFB192_AES_BLUMENTHAL": config.USM_PRIV_CFB192_AES_BLUMENTHAL,
+    "USM_PRIV_CFB256_AES_BLUMENTHAL": config.USM_PRIV_CFB256_AES_BLUMENTHAL,
+    "USM_AUTH_NONE": config.USM_AUTH_NONE,
+    "USM_PRIV_NONE": config.USM_PRIV_NONE,
 }
 
 
@@ -37,33 +37,34 @@ def snmp_engine():
 
     # Transport setup
     # UDP over IPv4, first listening interface/port
-    config.addTransport(
+    config.add_transport(
         snmpEngine,
-        udp.domainName + (1,),
-        udp.UdpTransport().openServerMode(("0.0.0.0", 162)),
+        udp.DOMAIN_NAME + (1,),
+        udp.UdpTransport().open_server_mode(("0.0.0.0", 162)),
     )
 
     # SNMPv1/2c setup
     # SecurityName <-> CommunityName mapping
     if snmp_config.snmpv2 is not None:
         for entry in snmp_config.snmpv2:
-            config.addV1System(snmpEngine, entry.description, entry.community)
+            config.add_v1_system(
+                snmpEngine, entry.description, entry.community)
 
     # SNMP v3 setup
     if snmp_config.snmpv3.users is not None:
         for user in snmp_config.snmpv3.users:
             if user.engine_id is not None:
                 user.engine_id = v2c.OctetString(hexValue=user.engine_id)
-            config.addV3User(
+            config.add_v3_user(
                 snmpEngine,
                 userName=user.user,
                 authKey=user.auth_key,
                 privKey=user.priv_key,
                 authProtocol=authProtocol.get(
-                    user.auth_protocol.name, config.usmNoAuthProtocol
+                    user.auth_protocol.name, config.USM_AUTH_NONE
                 ),
                 privProtocol=authProtocol.get(
-                    user.priv_protocol.name, config.usmNoPrivProtocol
+                    user.priv_protocol.name, config.USM_PRIV_NONE
                 ),
                 securityEngineId=user.engine_id,
             )
@@ -77,7 +78,8 @@ def snmp_engine():
         varBinds,
         cbCtx,
     ):
-        _, tAddress = snmpEngine.msgAndPduDsp.getTransportInfo(stateReference)
+        _, tAddress = snmpEngine.message_dispatcher.get_transport_info(
+            stateReference)
         message = {}
         message["host_dns"] = tAddress[0].strip()
         message["host_ip"] = tAddress[0].strip()
@@ -89,7 +91,7 @@ def snmp_engine():
             varBind = str(
                 rfc1902.ObjectType(
                     rfc1902.ObjectIdentity(oid), val
-                ).resolveWithMib(mibViewController)
+                ).resolve_with_mib(mibViewController)
             )
             if "sysUpTime" in varBind:
                 message["uptime"] = varBind.split(" = ")[1].strip()
@@ -111,15 +113,15 @@ def snmp_engine():
 
     # Register SNMP Application at the SNMP engine
     ntfrcv.NotificationReceiver(snmpEngine, cbFun)
-    snmpEngine.transportDispatcher.jobStarted(1)
+    snmpEngine.transport_dispatcher.job_started(1)
     try:
         log.error("Trap Receiver started on port 162. Press Ctrl-c to quit.")
-        snmpEngine.transportDispatcher.runDispatcher()
+        snmpEngine.transport_dispatcher.run_dispatcher()
         ntfrcv.NotificationReceiver(snmpEngine, cbFun)
     except KeyboardInterrupt:
         log.error("Ctrl-c Pressed. Trap Receiver Stopped")
     finally:
-        snmpEngine.transportDispatcher.closeDispatcher()
+        snmpEngine.transport_dispatcher.close_dispatcher()
 
 
 def main():
