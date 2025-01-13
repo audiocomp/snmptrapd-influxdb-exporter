@@ -38,6 +38,13 @@ custom_mappings:
     fields:
       - ifAdminStatus
       - ifOperStatus
+  SNMPv2-SMI::enterprises.8072.2.3.0.1:
+    measurement: heartbeat
+    tags:
+      - SNMPv2-SMI::enterprises.8072.2.3.2.1
+    fields:
+      - SNMPv2-SMI::enterprises.8072.2.3.2.1
+
 # Mibs
 mib_list: ['SNMPv2-MIB']
 
@@ -50,12 +57,13 @@ snmpv2:
 snmpv3:
   engine_id: 800009e5604083371bc6d10a42
   users:
-    - user: usr-md5-aes128
+    - user: trap-md5-aes128
       auth_protocol: md5
       auth_key: authkey1
       priv_protocol: aes128
       priv_key: privkey1
-    - user: usr-sha512-aes256
+      engine_id: 800009e5604083371bc6d10a43
+    - user: inform-sha512-aes256
       auth_protocol: sha512
       auth_key: authkey2
       priv_protocol: aes256
