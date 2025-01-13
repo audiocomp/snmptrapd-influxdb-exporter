@@ -5,6 +5,9 @@ LABEL maintainer="Steve Brown https://github.com/audiocomp"
 RUN apk update
 RUN apk upgrade --no-cache -v
 
+# Add mibs
+RUN apk add --no-cache -v net-snmp-libs
+
 # Update PIP
 RUN pip install --upgrade pip
 
