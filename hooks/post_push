@@ -1,5 +1,0 @@
-#!/bin/bash
-
-version=`cat VERSION`
-docker tag $IMAGE_NAME $DOCKER_REPO:$version
-docker push $DOCKER_REPO:$version
