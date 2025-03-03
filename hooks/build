@@ -5,7 +5,7 @@ IMAGE_NAME="audiocomp/snmptrapd-influxdb-exporter"
 VERSION=${DOCKER_TAG:-latest}
 
 # Build the Docker image with a specific tag
-docker build --sbom=true --provenance=true -t $IMAGE_NAME:$VERSION .
+docker buildx build --sbom=true --provenance=true -t $IMAGE_NAME:$VERSION .
 
 # Push the Docker image to Docker Hub
 docker push $IMAGE_NAME:$VERSION
