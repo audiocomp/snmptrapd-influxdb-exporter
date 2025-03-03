@@ -27,10 +27,10 @@ RUN apk update && apk upgrade --no-cache -v
 RUN addgroup -g 1501 -S appgroup && adduser -u 1501 -D -H -S appuser -G appgroup
 
 # Copy net-snmp-libs & installed Python packages from builder stage
-COPY --from=builder /usr/lib /usr/lib \
-    && COPY --from=builder /usr/share/snmp /usr/share/snmp \
-    && COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages \
-    && COPY --from=builder /app /app 
+COPY --from=builder /usr/lib /usr/lib
+COPY --from=builder /usr/share/snmp /usr/share/snmp
+COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+COPY --from=builder /app /app 
 
 # Change ownership of the application files
 RUN chown -R appuser:appgroup /app
