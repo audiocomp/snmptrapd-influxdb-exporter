@@ -256,7 +256,6 @@ snmptrap -d -v 3 -u trap-md5-aes128 -a MD5 -A authkey1 -x AES -X privkey1 -l aut
 snmpinform -d -v 3 -u inform-sha512-aes256 -a SHA-512 -A authkey2 -x AES-256 -X privkey2 -l authPriv localhost '' NET-SNMP-EXAMPLES-MIB::netSnmpExampleHeartbeatNotification netSnmpExampleHeartbeatRate i 123456
 ```
 
-
 Using OIDs instead of a MIB
 
 ```sh
