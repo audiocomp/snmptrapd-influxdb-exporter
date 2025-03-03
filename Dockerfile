@@ -1,28 +1,44 @@
+# Builder stage
+FROM python:3.13-alpine3.21 AS builder
+LABEL maintainer="Steve Brown https://github.com/audiocomp"
+
+# Update and install dependencies
+RUN apk update && apk upgrade --no-cache -v && apk add --no-cache -v net-snmp-libs libcap
+
+# Update PIP and install required packages
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --upgrade pip && pip install --no-cache-dir -r /tmp/requirements.txt
+
+# Grant the application the capability to bind to privileged ports
+RUN setcap 'cap_net_bind_service=+ep' /usr/local/bin/python3.13
+
+# Copy application code
+COPY ./snmptrapd_influxdb_exporter /app
+
+# Final stage
 FROM python:3.13-alpine3.21
 LABEL maintainer="Steve Brown https://github.com/audiocomp"
 
-# Update
-RUN apk update
-RUN apk upgrade --no-cache -v
+# Create a non-root user and group
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-# Add mibs
-RUN apk add --no-cache -v net-snmp-libs
+# Copy net-snmp-libs from builder stage
+COPY --from=builder /usr/lib /usr/lib
+COPY --from=builder /usr/share/snmp /usr/share/snmp
 
-# Update PIP
-RUN pip install --upgrade pip
+# Copy installed Python packages from builder stage
+COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+COPY --from=builder /app /app
 
-# Install Required Packages
-COPY requirements.txt  /tmp/requirements.txt
-RUN pip install --no-cache-dir -r /tmp/requirements.txt
+# Change ownership of the application files
+RUN chown -R appuser:appgroup /app
 
-# Add Code & Config
-COPY ./snmptrapd_influxdb_exporter/mibs /mibs
-COPY ./snmptrapd_influxdb_exporter/models /models
-COPY ./snmptrapd_influxdb_exporter/modules /modules
-ADD ./snmptrapd_influxdb_exporter/snmptrapd-influxdb-exporter.py .
-ADD ./snmptrapd_influxdb_exporter/config.yaml .
-ADD README.md .
+
+# Switch to the non-root user
+USER appuser
+
+WORKDIR /app
 
 EXPOSE 162/udp
 
-CMD ["python3","snmptrapd-influxdb-exporter.py"]
+CMD ["python3", "snmptrapd-influxdb-exporter.py"]
