@@ -10,6 +10,10 @@
 # supported CodeQL languages.
 #
 name: "CodeQL"
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: read
 
 on:
   push:
