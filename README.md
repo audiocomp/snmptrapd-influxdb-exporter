@@ -1,5 +1,8 @@
 # snmptrapd-influxdb-exporter
 
+![Docker Pulls](https://img.shields.io/docker/pulls/audiocomp/snmptrapd-influxdb-exporter.svg)
+![Github tag](https://img.shields.io/github/tag-date/audiocomp/snmptrapd-influxdb-exporter.svg)
+
 This is a SNMP Trap collector based on pysnmp, which then provides an export to InfluxDB v2.x using a custom Python script.
 The project is forked from <https://github.com/dpajin/snmptrapd-influxdb-exporter.git> which provides support for InfluxDB v1.x
 
