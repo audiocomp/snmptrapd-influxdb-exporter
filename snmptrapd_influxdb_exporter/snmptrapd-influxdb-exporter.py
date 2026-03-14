@@ -1,5 +1,10 @@
 import asyncio
 
+try:
+    asyncio.get_event_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
+
 from modules.datapoints import build_datapoints
 from modules.load_config import log, snmp_config
 from modules.load_mibs import mibViewController
