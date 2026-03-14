@@ -11,7 +11,7 @@ services:
     - ./snmptrapd_influxdb_exporter/mibs:/mibs
     - ./snmptrapd_influxdb_exporter/config.yaml:/config.yaml
   influxdb:
-    image: quay.io/influxdb/influxdb:v2.0.4
+    image: quay.io/influxdb/influxdb:v2.2.0
     container_name: snmptrapd-influxdb
     volumes:
       # Mount for influxdb data directory and configuration
@@ -23,7 +23,7 @@ services:
   influxdb_cli:
     links:
       - influxdb
-    image: quay.io/influxdb/influxdb:v2.0.4
+    image: quay.io/influxdb/influxdb:v2.2.0
     container_name: snmptrapd-influxdb-cli
     # Update to something secure, then use these same configurations parameters in your snmptrapd-influxdb-exporter config.yaml
     entrypoint: influx setup --bucket snmptraps -t influx-snmptraps -o snmptraps --username=influxdb --password=influxdb --host=http://influxdb:8086 -f
