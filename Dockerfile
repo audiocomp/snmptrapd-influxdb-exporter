@@ -22,6 +22,7 @@ LABEL maintainer="Steve Brown https://github.com/audiocomp"
 
 # Update base image
 RUN apk update && apk upgrade --no-cache --available -v
+RUN pip install --upgrade pip
 
 # Create a non-root user and group
 RUN addgroup -g 1501 -S appgroup && adduser -u 1501 -D -H -S appuser -G appgroup
