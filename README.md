@@ -182,16 +182,17 @@ time                host_ip  host_name ifAdminStatus ifIndex ifName   ifOperStat
 1567526246944423884 10.0.0.1 PE1       testing       528     ge-0/0/2 lowerLayerDown IF-MIB::linkDown
 ```
 
-### 5. Run container usind docker-compose
+### 5. Run container using docker-compose
 
 Using docker-compose is the easiest way to run the container. The docker-compose files creates volumes for sharing the local files with the container. The sample provided includes an associated influxdB container.
+NB Update the .env.influxdb2- files with your personal credentials and update the token in config.yaml to match
 In this way the container image does not need to be rebuilt every time the configuration is updated?:
 Adding MIBs and changing the configuration requires a container restart.
 
-To start the containter use *docker-compose up*:
+To start the containter use *docker compose up*:
 
 ```sh
-# docker-compose up -d
+# docker compose up -d
 Pulling snmptrapd-influxdb-export (audiocomp/snmptrapd-influxdb-exporter:)...
 latest: Pulling from audiocomp/snmptrapd-influxdb-exporter
 9d48c3bd43c5: Pull complete
@@ -234,16 +235,16 @@ The Container logs to the standard output, so you can see the logs from docker, 
 2019-09-04 05:12:04,096 - snmptrapd-influxdb-exporter - DEBUG - add oid_datapoint {'measurement': 'link', 'tags': {'host_name': '10.49.170.189', 'host_ip': '10.49.170.189', 'snmpTrapOID': 'IF-MIB::linkUp', 'ifIndex': '1073741824'}, 'fields': {'ifAdminStatus': 'testing', 'ifOperStatus': 'lowerLayerDown'}}
 ```
 
-To Stop the containter use *docker-compose down*:
+To Stop the containter use *docker compose down*:
 
 ```sh
-# docker-compose down
+# docker compose down
 ```
 
 To Restart the containter use *docker-compose up*:
 
 ```sh
-# docker-compose up -d
+# docker compose up -d
 ```
 
 ### 6. Send Test Messages
