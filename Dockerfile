@@ -1,5 +1,5 @@
 # Builder stage
-FROM python:3.14-alpine3.23 AS builder
+FROM python:3.14-alpine3.24 AS builder
 LABEL maintainer="Steve Brown https://github.com/audiocomp"
 
 # Update base image and install dependencies

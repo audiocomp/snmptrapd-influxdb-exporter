@@ -1,8 +1,8 @@
-aiohttp==3.13.3
+aiohttp==3.14.3
 aiohttp-retry==2.9.1
-cryptography==46.0.5
+cryptography==50.0.1
 influxdb-client==1.50.0
-pydantic==2.12.5
-pysmi==1.6.3
-pysnmp==7.1.22
+pydantic==2.13.5
+pysmi==2.0.0
+pysnmp==7.1.29
 PyYAML==6.0.3
